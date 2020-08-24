@@ -27,7 +27,12 @@ class Ticker:
 							priceusd = round(float(conts['priceUsd']), 2)
 							changes24h = round(float(conts['percentChange24hUsd']), 3)
 
-					self.data += f'{name}: ${priceusd} - {changes24h}%\n'
+							if "-" in str(changes24h):
+								self.data += f'*{name}:* ${priceusd} ({changes24h}%) 💔\n'
+							elif changes24h > 30:
+								self.data += f'*{name}:* ${priceusd} ({changes24h}%) 🔔🔔🔔\n'
+							else:
+								self.data += f'*{name}:* ${priceusd} ({changes24h}%) ❤\n'
 
 		except Exception:
 			sleep(30)
