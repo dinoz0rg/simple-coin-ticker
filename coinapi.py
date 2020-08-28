@@ -7,8 +7,8 @@ import logging
 
 class Ticker:
 	def __init__(self):
-		self.chat_id = "INSERT_CHAT_ID_HERE"
-		self.telegram_token = "INSERT_TELEGRAM_TOKEN_HERE"
+		self.chat_id = "INSERT_CHAT_ID"
+		self.bot = telepot.Bot("INSERT_TELEGRAM_TOKEN")
 		self.data = ''
 
 	def get_coins_value(self):
@@ -34,31 +34,54 @@ class Ticker:
 							else:
 								self.data += f'*{name}:* ${priceusd} ({changes24h}%) ❤\n'
 
-		except Exception:
+		except Exception as e:
+			logging.info(f'{e}')
 			sleep(30)
 			self.get_coins_value()
 
 	def telegram_poster(self):
 		try:
 			self.get_coins_value()
-
-			bot = telepot.Bot(self.telegram_token)
-			bot.sendMessage(chat_id=self.chat_id, text=f'\n{self.data}', parse_mode='Markdown')
-			print("Message sent!")
-
+			self.bot.sendMessage(chat_id=self.chat_id, text=f'\n{self.data}', parse_mode='Markdown')
 		except Exception as e:
 			logging.info(f"**** {e}")
 
+	def datatype_not_supported(self):
+		self.bot.sendMessage(chat_id=self.chat_id, text=f'Other datatypes are not supported currently', parse_mode='Markdown')
+
+
+class TelegramListener(Ticker):
+	def handle(self, msg):
+		try:
+			content_type, chat_type, chat_id = telepot.glance(msg)
+			# print(f"{content_type}, {chat_type}, {chat_id}")
+
+			if content_type == 'text' and msg["text"].lower() == "status":
+				self.telegram_poster()
+				print("Message sent via request")
+			elif content_type != 'text':
+				self.datatype_not_supported()
+
+		except Exception as e:
+			self.bot.sendMessage(self.chat_id, f"{e}")
+			logging.info(f"Exception in handle: {e}")
+
+	def telegram_listener_startup(self):
+		self.bot.message_loop(self.handle)
+
 
 def main():
+	TelegramListener().telegram_listener_startup()
+	print('Listening ...')
+
 	try:
 		while True:
-			d = Ticker()
-			d.telegram_poster()
-			sleep(5)
+			Ticker().telegram_poster()
+			print("Message sent via loop")
+			sleep(3600)
 
-	except Exception:
-		print("Exception in main")
+	except Exception as e:
+		print(f"Exception in main: {e}")
 
 
 if __name__ == '__main__':
