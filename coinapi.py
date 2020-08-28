@@ -57,10 +57,10 @@ class TelegramListener(Ticker):
 			# print(f"{content_type}, {chat_type}, {chat_id}")
 
 			if content_type == 'text' and msg["text"].lower() == "status":
-				self.telegram_poster()
+				Ticker().telegram_poster()
 				print("Message sent via request")
 			elif content_type != 'text':
-				self.datatype_not_supported()
+				Ticker().datatype_not_supported()
 
 		except Exception as e:
 			self.bot.sendMessage(self.chat_id, f"{e}")
