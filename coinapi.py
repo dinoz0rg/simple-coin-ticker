@@ -7,8 +7,8 @@ import logging
 
 class Ticker:
 	def __init__(self):
-		self.chat_id = "451960095"
-		self.bot = telepot.Bot("1209375048:AAFNFz9_lnXaNmjR4W_zn1LCP4LF5t602-g")
+		self.chat_id = "TELEGRAM_CHAT_ID"
+		self.bot = telepot.Bot("TELEGRAM_TOKEN")
 		self.data = ''
 
 	def get_coins_value(self):
