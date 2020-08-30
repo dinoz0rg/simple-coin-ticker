@@ -7,8 +7,8 @@ import logging
 
 class Ticker:
 	def __init__(self):
-		self.chat_id = "INSERT_CHAT_ID"
-		self.bot = telepot.Bot("INSERT_TELEGRAM_TOKEN")
+		self.chat_id = "451960095"
+		self.bot = telepot.Bot("1209375048:AAFNFz9_lnXaNmjR4W_zn1LCP4LF5t602-g")
 		self.data = ''
 
 	def get_coins_value(self):
@@ -47,8 +47,8 @@ class Ticker:
 			logging.info(f"**** {e}")
 
 	def datatype_not_supported(self):
-		self.bot.sendMessage(chat_id=self.chat_id, text=f'Other datatypes are not supported currently', parse_mode='Markdown')
-
+		self.bot.sendMessage(chat_id=self.chat_id, text=f'Other datatypes are not supported currently',
+							 parse_mode='Markdown')
 
 class TelegramListener(Ticker):
 	def handle(self, msg):
@@ -69,7 +69,6 @@ class TelegramListener(Ticker):
 	def telegram_listener_startup(self):
 		self.bot.message_loop(self.handle)
 
-
 def main():
 	TelegramListener().telegram_listener_startup()
 	print('Listening ...')
@@ -82,7 +81,6 @@ def main():
 
 	except Exception as e:
 		print(f"Exception in main: {e}")
-
 
 if __name__ == '__main__':
 	logging.basicConfig(
